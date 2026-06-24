@@ -8,6 +8,15 @@
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
 	<link rel="stylesheet" href="assets/css/style.css">
+	<style>
+	/* Weather widget overrides placed inline to keep widget self-contained */
+	.weather-card{display:flex;align-items:center;gap:16px;padding:14px;border-radius:12px;background:var(--card);box-shadow:0 10px 30px rgba(11,15,30,0.05);max-width:320px}
+	.weather-left{display:flex;flex-direction:column;align-items:flex-start}
+	.weather-temp{font-size:34px;font-weight:700;color:var(--accent)}
+	.weather-cond{font-size:18px;color:var(--muted);margin-top:6px}
+	.weather-meta{font-size:13px;color:var(--muted);margin-top:6px}
+	@media (max-width:800px){.weather-card{margin:18px auto 0}}
+	</style>
 </head>
 <body>
 	<header class="nav">
@@ -20,6 +29,19 @@
 			</nav>
 		</div>
 	</header>
+
+	<div class="container nav-weather" style="margin-top:6px;">
+		<div style="display:flex;justify-content:flex-end;">
+			<div id="weather" class="card weather-card" aria-live="polite">
+				<div class="weather-left">
+					<div id="weather-temp" class="weather-temp">—°F</div>
+					<div id="weather-cond" class="weather-cond">Detecting weather…</div>
+					<div id="weather-location" class="weather-meta"></div>
+				</div>
+				<div id="weather-emoji" style="font-size:44px;line-height:1">☀️</div>
+			</div>
+		</div>
+	</div>
 
 	<main>
 		<section class="hero">
@@ -64,6 +86,50 @@
 
 	<script>
 		document.getElementById('year').textContent = new Date().getFullYear();
+		(function(){
+			const tempEl = document.getElementById('weather-temp');
+			const condEl = document.getElementById('weather-cond');
+			const emojiEl = document.getElementById('weather-emoji');
+			const locEl = document.getElementById('weather-location');
+
+			function mapCode(code){
+				if(code === 0) return ['Sunny','☀️'];
+				if([1,2].includes(code)) return ['Partly cloudy','🌤️'];
+				if(code === 3) return ['Overcast','☁️'];
+				if([45,48].includes(code)) return ['Fog','🌫️'];
+				if([51,53,55,56,57].includes(code)) return ['Drizzle','🌦️'];
+				if([61,63,65,66,67,80,81,82].includes(code)) return ['Rain','🌧️'];
+				if([71,73,75,77,85,86].includes(code)) return ['Snow','❄️'];
+				if([95,96,99].includes(code)) return ['Thunderstorm','⛈️'];
+				return ['Unknown','🌈'];
+			}
+
+			function showError(msg){ tempEl.textContent='—'; condEl.textContent=msg; emojiEl.textContent='❓'; locEl.textContent=''; }
+
+			if(!navigator.geolocation){ showError('Geolocation unavailable'); return }
+
+			navigator.geolocation.getCurrentPosition(async (pos)=>{
+				const lat = pos.coords.latitude;
+				const lon = pos.coords.longitude;
+				locEl.textContent = `Lat ${lat.toFixed(2)}, Lon ${lon.toFixed(2)}`;
+				try{
+					const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&temperature_unit=fahrenheit`;
+					const res = await fetch(url);
+					if(!res.ok) throw new Error('Weather fetch failed');
+					const data = await res.json();
+					if(!data.current_weather) throw new Error('No current weather');
+					const cw = data.current_weather;
+					const temp = Math.round(cw.temperature);
+					const code = cw.weathercode;
+					const [label,emoji] = mapCode(code);
+					tempEl.textContent = `${temp}°F`;
+					condEl.textContent = label;
+					emojiEl.textContent = emoji;
+				}catch(err){ showError('Weather unavailable') }
+			}, (err)=>{
+				if(err && err.code===1) showError('Please enable location to see your weather'); else showError('Location error');
+			}, {timeout:10000});
+		})();
 	</script>
 </body>
 </html>
