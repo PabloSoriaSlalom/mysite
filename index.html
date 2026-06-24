@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>Pablo — Designer</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+	<header class="nav">
+		<div class="container nav-inner">
+			<a class="logo" href="#">Pablo</a>
+			<nav>
+				<a href="#work">Work</a>
+				<a href="#about">About</a>
+				<a href="#contact">Contact</a>
+			</nav>
+		</div>
+	</header>
+
+	<main>
+		<section class="hero">
+			<div class="container hero-grid">
+				<div class="hero-text">
+					<h1>Hi, I’m Pablo.</h1>
+					<p class="lead">I craft thoughtful visual identities and interfaces — designer focused on clear, beautiful experiences.</p>
+					<p class="cta-row">
+						<a class="btn primary" href="#work">See my work</a>
+						<a class="btn ghost" href="#contact">Get in touch</a>
+					</p>
+				</div>
+				<div class="hero-avatar">
+					<img src="assets/images/profile.svg" alt="Pablo avatar">
+				</div>
+			</div>
+		</section>
+
+		<section id="work" class="container section">
+			<h2 class="section-title">Selected Work</h2>
+			<div class="grid">
+				<article class="card"> <div class="card-thumb"></div> <h3>Brand identity for Bloom</h3> <p>Logo, colors, and visual system.</p></article>
+				<article class="card"> <div class="card-thumb"></div> <h3>Website for Studio Nova</h3> <p>UI, layout, and animations.</p></article>
+				<article class="card"> <div class="card-thumb"></div> <h3>Product concept: Flow</h3> <p>Interaction design and prototypes.</p></article>
+			</div>
+		</section>
+
+		<section id="about" class="container section about">
+			<h2 class="section-title">About</h2>
+			<p>I’m a designer working across brand, product, and interface design. I enjoy simplifying complexity with clear systems and considered aesthetics.</p>
+		</section>
+
+		<section id="contact" class="container section contact">
+			<h2 class="section-title">Contact</h2>
+			<p>Let’s make something neat — <a href="mailto:hello@pablo.design">hello@pablo.design</a></p>
+		</section>
+	</main>
+
+	<footer class="footer">
+		<div class="container">© <span id="year"></span> Pablo — Designer</div>
+	</footer>
+
+	<script>
+		document.getElementById('year').textContent = new Date().getFullYear();
+	</script>
+</body>
+</html>
