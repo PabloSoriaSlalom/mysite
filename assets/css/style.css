@@ -41,3 +41,12 @@ body{
   .hero-grid{grid-template-columns:1fr;gap:20px;text-align:center}
   .hero-avatar img{margin:0 auto}
 }
+
+/* Weather widget styles moved from inline <style> in index.html */
+.weather-card{display:flex;align-items:center;gap:16px;padding:14px;border-radius:12px;background:var(--card);box-shadow:0 10px 30px rgba(11,15,30,0.05);max-width:320px}
+.weather-left{display:flex;flex-direction:column;align-items:flex-start}
+.weather-temp{font-size:34px;font-weight:700;color:var(--accent)}
+.weather-cond{font-size:18px;color:var(--muted);margin-top:6px}
+.weather-meta{font-size:13px;color:var(--muted);margin-top:6px}
+@media (max-width:800px){.weather-card{margin:18px auto 0}}
+
